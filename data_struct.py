@@ -3,10 +3,13 @@
 class ParseStack:
 
     def __init__(self) -> None:
-        self.data = ['ROOT']
+        self.data = [{'id':0, 'lemma':'ROOT'}]
 
     def show_data(self):
-        print(self.data)
+        s = ''
+        for word in self.data:
+            s+=" "+word['lemma']
+        print(s)
 
     def get_len(self):
         return len(self.data)
@@ -59,13 +62,13 @@ class ParseStack:
         # 避免之后的词无法进行关系的建立
         # 也就是说，只有当缓冲区没有依赖当前要被栈删除的词时，才可以进行left-arc
         for word in buffer:
-            temp_head_id = self.word2dict(word, sentence)['head']
-            if self.index2word(temp_head_id, sentence) == self.data[-2]:
+            temp_head_id = word['head']
+            if temp_head_id == self.data[-2]['id']:
                 return False
 
         # 找到倒数第二个单词的头，看是不是和倒数第一个相同
-        head = self.get_head(sentence, self.data[-2])
-        return head == self.data[-1]
+        head_id = self.data[-2]['head']
+        return head_id == self.data[-1]['id']
 
     def can_right_arc(self, sentence, buffer):
         """
@@ -82,18 +85,18 @@ class ParseStack:
         # 避免之后的词无法进行关系的建立
         # 也就是说，只有当缓冲区没有依赖当前要被栈删除的词时，才可以进行right-arc
         for word in buffer:
-            temp_head_id = self.word2dict(word, sentence)['head']
-            if self.index2word(temp_head_id, sentence) == self.data[-1]:
+            temp_head_id = word['head']
+            if temp_head_id == self.data[-1]['id']:
                 return False
 
         # 找到倒数第一个单词的头，看是不是和倒数第二个相同
-        head = self.get_head(sentence, self.data[-1])
+        head_id = self.data[-1]['head']
 
         # 当head为ROOT时，进行拦截，判断缓冲区长度是否为0
         # 只有当缓冲区长度为0时，才可进行ROOT -> word 操作
-        if head == 'ROOT' and len(buffer) != 0:
+        if head_id == 0 and len(buffer)!=0:
             return False
-        return head == self.data[-2]
+        return head_id == self.data[-2]['id']
 
     def left_arc(self):
         """
@@ -104,8 +107,8 @@ class ParseStack:
         if len(self.data) < 3:
             print('非法操作！栈中只有 ' +str(len(self.data) ) +'个元素，无法执行left_arc')
             return
-        head_word = self.data[-1]
-        sub_word = self.data.pop(-2)
+        head_word = self.data[-1]['lemma']
+        sub_word = self.data.pop(-2)['lemma']
         return head_word, sub_word
 
     def right_arc(self):
@@ -116,11 +119,11 @@ class ParseStack:
         """
         data_len = len(self.data)
         if data_len == 2:
-            head_word = self.data[0]
-            sub_word = self.data.pop(1)
+            head_word = self.data[0]['lemma']
+            sub_word = self.data.pop(1)['lemma']
         elif data_len >= 3:
-            head_word = self.data[-2]
-            sub_word = self.data.pop(-1)
+            head_word = self.data[-2]['lemma']
+            sub_word = self.data.pop(-1)['lemma']
         else:
             print('非法操作！栈中只有 ' +str(data_len ) +'个元素，无法执行right_arc')
             return

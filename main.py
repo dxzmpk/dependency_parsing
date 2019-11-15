@@ -11,7 +11,7 @@ def parse_sentence(index, sentence):
 
     buffer = []
     for word in sentence:
-        buffer.append(word['lemma'])
+        buffer.append(word)
 
     stack = ParseStack() #每次分析开始都新建一个句法分析栈
     # 当栈不是只有ROOT或者buffer长度大于0时，执行此操作
@@ -25,25 +25,26 @@ def parse_sentence(index, sentence):
         elif len(buffer) > 0:
             word = buffer.pop(0)
             stack.shift(word)
-            # print('shift: ' + word)
+            # print('shift: ' + word['lemma'])
         else:
             print("ERROR. PARSE ERROR")
             fail += 1
             print(index)
             break
+        # stack.show_data()
 
 fail = 0
 sen_list = ReadData().readfile('train')
 print('训练语料读取完毕')
 
-for index, sentence in enumerate(sen_list):
-    parse_sentence(index, sentence)
-print('错误数目'+str(fail))
+# for index, sentence in enumerate(sen_list):
+#     parse_sentence(index, sentence)
+# print('错误数目'+str(fail))
 
-# test_index = 19998
-# parse_sentence(test_index, sen_list[test_index])
-# sentence = sen_list[test_index]
-# for word in sentence:
-#     print(sentence[word]['id'],word, sentence[word]['head'])
+test_index = 1304
+parse_sentence(test_index, sen_list[test_index])
+sentence = sen_list[test_index]
+for word_dict in sentence:
+    print(word_dict)
 
 
