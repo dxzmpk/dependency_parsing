@@ -11,21 +11,21 @@ def parse_sentence(index, sentence):
 
     buffer = []
     for word in sentence:
-        buffer.append(word)
+        buffer.append(word['lemma'])
 
     stack = ParseStack() #每次分析开始都新建一个句法分析栈
     # 当栈不是只有ROOT或者buffer长度大于0时，执行此操作
     while stack.get_len() > 1 or len(buffer) > 0:
         if stack.can_left_arc(sentence, buffer):
             head, sub = stack.left_arc()
-            print('left arc：'+head+"-->"+sub)
+            # print('left arc：'+head+"-->"+sub)
         elif stack.can_right_arc(sentence, buffer):
             head, sub = stack.right_arc()
-            print('right arc：'+head + "-->" + sub)
+            # print('right arc：'+head + "-->" + sub)
         elif len(buffer) > 0:
             word = buffer.pop(0)
             stack.shift(word)
-            print('shift: ' + word)
+            # print('shift: ' + word)
         else:
             print("ERROR. PARSE ERROR")
             fail += 1

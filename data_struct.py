@@ -19,23 +19,30 @@ class ParseStack:
         :param word:
         :return:
         """
-        head_id = sentence[word]['head']
+        head_id = self.word2dict(word, sentence)['head']
         if head_id == 0:
             return 'ROOT'
-        for index, value in sentence.items():
-            if value['id'] == head_id:
-                return index
+        return self.index2word(head_id, sentence)
 
     def index2word(self, index, sentence):
         """
-        在sentence中找到id为index的词，并返回其单词形式
+        内部函数，在sentence中找到id为index的词，并返回其单词形式
         :param index:
         :param sentence:
         :return:
         """
-        for word, value in sentence.items():
-            if value['id'] == index:
-                return word
+        return sentence[index-1]['lemma']
+
+    def word2dict(self, word, sentence):
+        """
+        工具函数，从sentence中查询得到word的信息，以dict形式返回
+        :param word: 待查询词
+        :param sentence: 句子
+        :return:
+        """
+        for word_dict in sentence:
+            if word_dict['lemma'] == word:
+                return word_dict
 
     def can_left_arc(self, sentence, buffer):
         """
@@ -52,7 +59,7 @@ class ParseStack:
         # 避免之后的词无法进行关系的建立
         # 也就是说，只有当缓冲区没有依赖当前要被栈删除的词时，才可以进行left-arc
         for word in buffer:
-            temp_head_id = sentence[word]['head']
+            temp_head_id = self.word2dict(word, sentence)['head']
             if self.index2word(temp_head_id, sentence) == self.data[-2]:
                 return False
 
@@ -75,7 +82,7 @@ class ParseStack:
         # 避免之后的词无法进行关系的建立
         # 也就是说，只有当缓冲区没有依赖当前要被栈删除的词时，才可以进行right-arc
         for word in buffer:
-            temp_head_id = sentence[word]['head']
+            temp_head_id = self.word2dict(word, sentence)['head']
             if self.index2word(temp_head_id, sentence) == self.data[-1]:
                 return False
 

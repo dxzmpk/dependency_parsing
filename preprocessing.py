@@ -20,7 +20,7 @@ class ReadData:
                     sentence.append(word)
                 else:
                     sentence_list.append(sentence)
-                    sentence = {}
+                    sentence = []
             return sentence_list
 
     def line2word(self, line):
@@ -38,4 +38,5 @@ class ReadData:
 # 测试本模块功能
 # sen_list = ReadData().readfile('dev')
 # print(len(sen_list))
+# print(sen_list.pop())
 # print(sen_list.pop())
