@@ -3,7 +3,7 @@
 class ParseStack:
 
     def __init__(self) -> None:
-        self.data = [{'id':0, 'lemma':'ROOT'}]
+        self.data = [{'id':0, 'lemma':'ROOT', 'postag':'root_pos'}]
 
     def show_data(self):
         s = ''
@@ -13,39 +13,6 @@ class ParseStack:
 
     def get_len(self):
         return len(self.data)
-
-
-    def get_head(self, sentence, word):
-        """
-        内部调用函数，得到当前词在句中的头,以单词的形式返回
-        :param sentence:
-        :param word:
-        :return:
-        """
-        head_id = self.word2dict(word, sentence)['head']
-        if head_id == 0:
-            return 'ROOT'
-        return self.index2word(head_id, sentence)
-
-    def index2word(self, index, sentence):
-        """
-        内部函数，在sentence中找到id为index的词，并返回其单词形式
-        :param index:
-        :param sentence:
-        :return:
-        """
-        return sentence[index-1]['lemma']
-
-    def word2dict(self, word, sentence):
-        """
-        工具函数，从sentence中查询得到word的信息，以dict形式返回
-        :param word: 待查询词
-        :param sentence: 句子
-        :return:
-        """
-        for word_dict in sentence:
-            if word_dict['lemma'] == word:
-                return word_dict
 
     def can_left_arc(self, sentence, buffer):
         """

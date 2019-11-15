@@ -21,6 +21,7 @@ class ReadData:
                 else:
                     sentence_list.append(sentence)
                     sentence = []
+            print("训练语料读取完毕")
             return sentence_list
 
     def line2word(self, line):
